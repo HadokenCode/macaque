@@ -27,12 +27,6 @@ jobs:
     - stage: test-int
       script: make testInt-api
       env: _=Integration tests for api module
-    - stage: release
-      script: make release-store-mongodb
-      env: _=Releasing store-mongodb module
-    - stage: release
-      script: make release-api
-      env: _=Releasing api module
     - stage: publish
       if: branch = master
       script: make publish-store-mongodb
