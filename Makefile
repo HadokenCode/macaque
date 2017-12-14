@@ -145,8 +145,18 @@ release-store-mongodb: clean vendor | $(BASE) $(GOGRPC) ; $(info $(M) building e
 	@echo "Building macaque-store-mongodb..."
 	$Q cd $(BASE) && sh scripts/release.sh store-mongodb cmd/store/mongodb/main.go
 
+.PHONY: publish-api
+publish-api: | $(BASE) ; $(info $(M) publishing dcker image) @ ## Publish docker image (api)
+	@echo "Publishing macaque-api..."
+	$Q cd $(BASE) && sh scripts/publish.sh store-mongodb
+
+.PHONY: publish-store-mongodb
+publish-store-mongodb: | $(BASE) ; $(info $(M) publishing dcker image) @ ## Publish docker image (store-mongodb)
+	@echo "Publishing macaque-store-mongodb..."
+	$Q cd $(BASE) && sh scripts/publish.sh store-mongodb
+
 .PHONY: test-int
-test-int: clean vendor testInt-api  testInt-store-mongodb | $(BASE) ; $(info $(M) Running integration tests…) @ ## Run integration tests
+test-int: clean vendor test-int-api | $(BASE) ; $(info $(M) Running integration tests…) @ ## Run integration tests
 
 .PHONY: testInt-api
 testInt-api: clean vendor  | $(BASE) ; $(info $(M) Running integration tests (api)…) @ ## Run integration tests for module api

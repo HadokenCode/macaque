@@ -33,3 +33,11 @@ jobs:
     - stage: release
       script: make release-api
       env: _=Releasing api module
+    - stage: publish
+      if: branch = master
+      script: make publish-store-mongodb
+      env: _=Publishing store-mongodb module
+    - stage: publish
+      if: branch = master
+      script: make publish-api
+      env: _=Publishing api module
