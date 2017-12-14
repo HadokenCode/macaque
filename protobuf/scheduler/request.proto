@@ -1,0 +1,29 @@
+syntax="proto3";
+package scheduler;
+import "google/protobuf/timestamp.proto";
+import "scheduler/common.proto";
+
+
+message CreateSchedulerRequest {
+    string description = 1;
+    string expression = 2;
+    repeated string labels = 3;
+    SchedulerType type = 4;
+    SchedulerStatus status = 5;
+    google.protobuf.Timestamp startDate = 6;
+    google.protobuf.Timestamp endDate = 7;
+    repeated SchedulerProperty properties = 8;
+    SchedulerMeta meta = 9;
+}
+
+message UpdateSchedulerRequest {
+
+}
+
+message DeleteSchedulerRequest {
+
+}
+
+message GetSchedulerRequest {
+
+}

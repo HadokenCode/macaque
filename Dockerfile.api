@@ -1,0 +1,6 @@
+FROM alpine:3.6
+
+ADD build/macaque-api-0.0.1-alpha1 /usr/local/bin/macaque-api
+
+EXPOSE 8080
+ENTRYPOINT /usr/local/bin/macaque-api

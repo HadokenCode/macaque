@@ -1,0 +1,46 @@
+syntax="proto3";
+package scheduler;
+
+import "google/protobuf/timestamp.proto";
+
+enum SchedulerType {
+    PUBLIC = 0;
+    PRIVATE = 1;
+}
+
+enum SchedulerStatus {
+    CREATED = 0;
+    SUSPENDED = 1;
+    DELETED = 3;
+}
+
+message SchedulerProperty {
+    
+    string key = 1;
+
+    oneof content {
+        string value = 2;
+        SchedulerProperty child =3;
+    }
+
+}
+
+message SchedulerMeta {
+    string createdBy = 1;
+    google.protobuf.Timestamp createdOn = 2;
+    string lastModificationBy = 3;
+    google.protobuf.Timestamp lastModificationOn = 4;
+}
+
+message Scheduler {
+    string id = 1;
+    string description = 2;
+    string expression = 3;
+    repeated string labels = 4;
+    SchedulerType type = 5;
+    SchedulerStatus status = 6;
+    google.protobuf.Timestamp startDate = 7;
+    google.protobuf.Timestamp endDate = 8;
+    repeated SchedulerProperty properties = 9;
+    SchedulerMeta meta = 10;
+}

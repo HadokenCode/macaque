@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+
+  macaque-api:
+    build:
+      context: ../..
+      dockerfile: Dockerfile.api
+    ports:
+      - 3031:8080

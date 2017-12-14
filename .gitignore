@@ -1,0 +1,10 @@
+build
+vendor
+test/tests.*
+test/coverage.*
+test
+bin
+.idea
+glide.lock
+.gopath
+testInt/store-mongodb/res/data

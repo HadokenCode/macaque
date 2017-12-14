@@ -1,0 +1,12 @@
+syntax="proto3";
+package scheduler;
+
+import "scheduler/request.proto";
+import "scheduler/response.proto";
+
+service SchedulerService {
+    
+    rpc CreateScheduler(CreateSchedulerRequest) returns (CreateSchedulerResponse);
+
+
+}

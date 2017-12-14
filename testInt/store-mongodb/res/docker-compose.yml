@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+
+  macaque-store-mongodb:
+    build:
+      context: ../../..
+      dockerfile: Dockerfile.store-mongodb
+    env_file:
+      - macaque-store-mongodb.env
+    ports:
+      - 5051:5051
+      - 5052:5052
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: macaque-mongodb
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --bind_ip_all # --quiet

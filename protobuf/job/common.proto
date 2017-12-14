@@ -1,0 +1,13 @@
+syntax="proto3";
+package job;
+
+enum JobType {
+    PUBLIC = 0;
+    PRIVATE = 1;
+}
+
+enum JobStatus {
+    CREATED = 0;
+    SUSPENDED = 1;
+    DELETED = 3;
+}

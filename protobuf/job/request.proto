@@ -1,0 +1,11 @@
+syntax="proto3";
+package job;
+
+import "job/common.proto";
+
+message CreateJobRequest {
+    string name = 1;
+    string description = 2;
+    JobType type = 3;
+    JobStatus status = 4;
+}

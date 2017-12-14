@@ -1,0 +1,15 @@
+syntax="proto3";
+package scheduler;
+
+import "scheduler/common.proto";
+import "google/protobuf/timestamp.proto";
+
+message CreateSchedulerResponse {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    string cronExpression = 4;
+    SchedulerType type = 5;
+    google.protobuf.Timestamp startDate = 6;
+    google.protobuf.Timestamp endDate = 7;
+}

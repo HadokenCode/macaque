@@ -1,0 +1,16 @@
+syntax="proto3";
+package store;
+
+import "store/common.proto";
+import "store/scheduler.proto";
+
+import "google/protobuf/empty.proto";
+
+service StoreService {
+    
+    rpc SaveScheduler(SchedulerEntity) returns (EntityID);
+
+    rpc DeleteSchedulerByID (EntityID) returns (google.protobuf.Empty);
+
+    rpc GetSchedulerByID (EntityID) returns (SchedulerEntity);
+}

@@ -1,0 +1,6 @@
+FROM alpine:3.6
+
+ADD build/macaque-store-mongodb-0.0.1-alpha1 /usr/local/bin/macaque-store-mongodb
+
+EXPOSE 5051 5052
+ENTRYPOINT /usr/local/bin/macaque-store-mongodb

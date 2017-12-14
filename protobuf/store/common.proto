@@ -1,0 +1,9 @@
+syntax="proto3";
+package store;
+
+
+message EntityID {
+    
+    string id = 1;
+
+}

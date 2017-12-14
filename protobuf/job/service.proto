@@ -1,0 +1,22 @@
+syntax="proto3";
+package job;
+
+import "google/protobuf/empty.proto";
+
+service JobService {
+    
+    rpc CreateJob(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+    rpc DeleteJob(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+    rpc GetJob(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+    rpc StopJob(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+    rpc RunJob(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+    rpc PauseJob(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+    rpc RestartJob(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+}

@@ -1,0 +1,27 @@
+language: go
+go:
+  - 1.9.x
+
+before_install:
+  - curl https://glide.sh/get | sh
+
+jobs:
+  include:
+    - stage: check-code
+      script: make vet
+      env: _=Running go vet
+    - stage: check-code
+      script: make lint
+      env: _=Running gofmt
+    - stage: test-unit
+      script: make test
+      env: _=Running full unit tests
+    - stage: test-int
+      script: make test-int-api
+      env: _=Integration tests for api module
+    - stage: release
+      script: make release-api
+      env: _=Releasing octopus-api
+    - stage: release
+      script: make release-organizations
+      env: _=Releasing octopus-organizations
