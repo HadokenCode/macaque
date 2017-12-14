@@ -13,11 +13,8 @@ before_install:
 jobs:
   include:
     - stage: check-code
-      script: make vet
-      env: _=Running go vet
-    - stage: check-code
-      script: make lint
-      env: _=Running golint
+      script: make vet & make lint
+      env: _=Running go vet, go lint
     - stage: test-unit
       script: make test
       env: _=Running full unit tests
