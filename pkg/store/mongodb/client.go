@@ -34,46 +34,44 @@ func setUpMgoConn() *mgo.DialInfo {
 		Timeout:  5 * time.Second,
 		Database: db,
 	}
-	
+
 }
 
-
-func insert(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *mgo.Collection) (interface{}, error)) (interface{},error) {
+func insert(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *mgo.Collection) (interface{}, error)) (interface{}, error) {
 	session, err := mgo.DialWithInfo(dial)
 	if err != nil {
 		logger.Errorf("\nError %+v\n", err)
-		return nil,err
+		return nil, err
 	}
-	
+
 	session.SetMode(mgo.Monotonic, true)
 	coll := session.DB(dial.Database).C(doc.collection())
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	defer session.Close()
 	logger.Infof("\n Querying fn %+v\n", coll)
 	res, err := queryFn(doc, coll)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	logger.Infof("\nSetting result %+v\n", res)
-	return res,nil
+	return res, nil
 }
 
-
 //CheckStatus ensusres the mongodb status
-func CheckStatus() error{
-	dial:=setUpMgoConn()
-	logger.Infof("\n - Dial details: %+v \n",dial)
+func CheckStatus() error {
+	dial := setUpMgoConn()
+	logger.Infof("\n - Dial details: %+v \n", dial)
 	sess, err := mgo.DialWithInfo(dial)
 	if err != nil {
-		logger.Errorf("\nError: %s \n",err.Error())
+		logger.Errorf("\nError: %s \n", err.Error())
 		return err
 	}
 	defer sess.Close()
 	err = sess.Ping()
 	if err != nil {
-		logger.Errorf("\nError: %s \n",err.Error())
+		logger.Errorf("\nError: %s \n", err.Error())
 		return err
 	}
 	logger.Infof("MongoDB server is healthy.")

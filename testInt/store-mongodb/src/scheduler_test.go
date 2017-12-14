@@ -9,10 +9,10 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/wildnature/macaque/pkg/grpc/health"
+	"github.com/wildnature/macaque/pkg/logger"
 	pb "github.com/wildnature/macaque/pkg/pb/store"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"github.com/wildnature/macaque/pkg/logger"
 	"time"
 )
 
@@ -23,17 +23,17 @@ const (
 
 // TestMain before each test
 func TestMain(m *testing.M) {
-	tries:=3
-	ready:=false
-	for !ready && tries>0 {
+	tries := 3
+	ready := false
+	for !ready && tries > 0 {
 		logger.Debug("Checking is service is up")
 		err := health.Check(healthAddress, "mongodb")
 		if err != nil {
 			logger.Errorf("\nError checking service health %v \n", err)
 			tries--
 			time.Sleep(3 * time.Second)
-		}else {
-			ready=true
+		} else {
+			ready = true
 		}
 	}
 	if ready {
@@ -54,14 +54,14 @@ func TestCreateScheduler(t *testing.T) {
 	logger.Debug("Creating connection")
 	client := pb.NewStoreServiceClient(conn)
 	cases := []struct {
-		description    string
-		content        *pb.SchedulerEntity
-		expectedError  error
+		description   string
+		content       *pb.SchedulerEntity
+		expectedError error
 	}{
 		{
-			description:    "I - Happy path",
-			content:        &pb.SchedulerEntity{},
-			expectedError:  nil,
+			description:   "I - Happy path",
+			content:       &pb.SchedulerEntity{},
+			expectedError: nil,
 		},
 	}
 
@@ -74,7 +74,7 @@ func TestCreateScheduler(t *testing.T) {
 			fmt.Println(err.Error())
 		}
 		if c.expectedError == nil {
-			assert.NotEmpty(t,result)
+			assert.NotEmpty(t, result)
 		} else {
 			assert.EqualValues(t, c.expectedError, err)
 		}

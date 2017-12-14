@@ -6,34 +6,35 @@ import (
 )
 
 var (
-	c    *configuration
+	c    *Config
 	once sync.Once
 )
 
 //GetConfiguration singleton pattern implementation
-func GetConfiguration() *configuration {
+func GetConfiguration() *Config {
 	once.Do(func() {
-		c = &configuration{
+		c = &Config{
 			items: make(map[string]string),
 		}
 	})
 	return c
 }
 
-type configuration struct {
+//Config configuration structure
+type Config struct {
 	items map[string]string
 	mu    sync.RWMutex
 }
 
 //Set function
-func (c *configuration) Set(key, data string) {
+func (c *Config) Set(key, data string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.items[key] = data
 }
 
 //Get method
-func (c *configuration) Get(key string) (string, error) {
+func (c *Config) Get(key string) (string, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	item, ok := c.items[key]

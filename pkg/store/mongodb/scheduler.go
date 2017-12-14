@@ -25,7 +25,7 @@ func SaveScheduler(scheduler *Scheduler) error {
 	logger.Infof("Getting collection name %s", schedulerCollection)
 	mgoDial := setUpMgoConn()
 	logger.Infof("Connection was already set up %v", mgoDial)
-	_,err:= insert(mgoDial, scheduler, insertSchedulerEntity)
+	_, err := insert(mgoDial, scheduler, insertSchedulerEntity)
 	return err
 }
 

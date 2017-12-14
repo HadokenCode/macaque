@@ -59,7 +59,7 @@ test-verbose: ARGS=-v            ## Run tests in verbose mode with coverage repo
 test-race:    ARGS=-race         ## Run tests with race detector
 $(TEST_TARGETS): NAME=$(MAKECMDGOALS:test-%=%)
 $(TEST_TARGETS): test
-check test tests: fmt lint vendor | $(BASE) ; $(info $(M) running $(NAME:%=% )tests…) @ ## Run tests
+check test tests: vendor | $(BASE) ; $(info $(M) running $(NAME:%=% )tests…) @ ## Run tests
 	$Q cd $(BASE) && $(GO) test -timeout $(TIMEOUT)s $(ARGS) $(TESTPKGS)
 
 test-xml: fmt lint vendor | $(BASE) $(GO2XUNIT) ; $(info $(M) running $(NAME:%=% )tests…) @ ## Run tests with xUnit output
@@ -146,13 +146,13 @@ release-store-mongodb: clean vendor | $(BASE) $(GOGRPC) ; $(info $(M) building e
 	$Q cd $(BASE) && sh scripts/release.sh store-mongodb cmd/store/mongodb/main.go
 
 .PHONY: test-int
-test-int: clean vendor test-int-api | $(BASE) ; $(info $(M) Running integration tests…) @ ## Run integration tests
+test-int: clean vendor testInt-api  testInt-store-mongodb | $(BASE) ; $(info $(M) Running integration tests…) @ ## Run integration tests
 
-.PHONY: test-int-api
-test-int-api: clean vendor  | $(BASE) ; $(info $(M) Running integration tests (api)…) @ ## Run integration tests for module api
+.PHONY: testInt-api
+testInt-api: clean vendor  | $(BASE) ; $(info $(M) Running integration tests (api)…) @ ## Run integration tests for module api
 	$Q cd $(BASE) sh scripts/run-integration-tests.sh api 3031 cmd/api/main.go
 
-.PHONY: test-int-store-mongodb
+.PHONY: testInt-store-mongodb
 testInt-store-mongodb: clean vendor  | $(BASE) ; $(info $(M) Running integration tests (store-mongodb)…) @ ## Run integration tests for module store-mongodb
 	$Q cd $(BASE) && sh scripts/run-integration-tests.sh store-mongodb 11001 cmd/store/mongodb/main.go
 

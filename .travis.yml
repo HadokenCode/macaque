@@ -17,11 +17,14 @@ jobs:
       script: make test
       env: _=Running full unit tests
     - stage: test-int
-      script: make test-int-api
+      script: make testInt-store-mongodb
+      env: _=Integration tests for store-mongodb module
+    - stage: test-int
+      script: make testInt-api
       env: _=Integration tests for api module
     - stage: release
-      script: make release-api
-      env: _=Releasing octopus-api
+      script: make release-store-mongodb
+      env: _=Releasing store-mongodb module
     - stage: release
-      script: make release-organizations
-      env: _=Releasing octopus-organizations
+      script: make release-api
+      env: _=Releasing api module
