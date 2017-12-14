@@ -7,8 +7,14 @@ go:
 services:
   - docker
   
-before_install:
-  - curl https://glide.sh/get | sh
+install:
+  - go get github.com/Masterminds/glide
+  - go get github.com/golang/lint/golint
+
+cache:
+  directories:
+    - $GOPATH/src
+    - $GOPATH/pkg
 
 jobs:
   include:
