@@ -17,7 +17,7 @@ cache:
   directories:
     - $GOPATH/src
     - $GOPATH/pkg
-    - $HOME/gopath/src/github.com/$TRAVIS_REPO_SLUG/vendor
+    - $HOME/gopath/src/github.com/$TRAVIS_REPO_SLUG
 
 jobs:
   include:
