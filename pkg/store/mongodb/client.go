@@ -21,20 +21,18 @@ func getConfigValueOrPanic(key string) string {
 	return val
 }
 
-func setUpMgoConn() *mgo.DialInfo {
+func buildDial() *mgo.DialInfo {
 	db := getConfigValueOrPanic(constant.Database)
 	address := getConfigValueOrPanic(constant.Address)
 	db, err := configuration.GetConfiguration().Get(constant.Database)
 	if err != nil {
 		panic(err)
 	}
-
 	return &mgo.DialInfo{
 		Addrs:    []string{address},
 		Timeout:  5 * time.Second,
 		Database: db,
 	}
-
 }
 
 func insert(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *mgo.Collection) (interface{}, error)) (interface{}, error) {
@@ -61,7 +59,7 @@ func insert(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *m
 
 //CheckStatus ensusres the mongodb status
 func CheckStatus() error {
-	dial := setUpMgoConn()
+	dial := buildDial()
 	logger.Infof("\n - Dial details: %+v \n", dial)
 	sess, err := mgo.DialWithInfo(dial)
 	if err != nil {

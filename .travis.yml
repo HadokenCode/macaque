@@ -17,7 +17,7 @@ jobs:
       env: _=Running go vet
     - stage: check-code
       script: make lint
-      env: _=Running gofmt
+      env: _=Running golint
     - stage: test-unit
       script: make test
       env: _=Running full unit tests

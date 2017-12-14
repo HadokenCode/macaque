@@ -23,7 +23,7 @@ func (s *Scheduler) collection() string {
 func SaveScheduler(scheduler *Scheduler) error {
 	schedulerCollection := getConfigValueOrPanic(constant.SchedulerCollection)
 	logger.Infof("Getting collection name %s", schedulerCollection)
-	mgoDial := setUpMgoConn()
+	mgoDial := buildDial()
 	logger.Infof("Connection was already set up %v", mgoDial)
 	_, err := insert(mgoDial, scheduler, insertSchedulerEntity)
 	return err
