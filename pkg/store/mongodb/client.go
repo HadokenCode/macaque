@@ -35,13 +35,12 @@ func buildDial() *mgo.DialInfo {
 	}
 }
 
-func insert(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *mgo.Collection) (interface{}, error)) (interface{}, error) {
+func run(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *mgo.Collection) (interface{}, error)) (interface{}, error) {
 	session, err := mgo.DialWithInfo(dial)
 	if err != nil {
 		logger.Errorf("\nError %+v\n", err)
 		return nil, err
 	}
-
 	session.SetMode(mgo.Monotonic, true)
 	coll := session.DB(dial.Database).C(doc.collection())
 	if err != nil {
@@ -56,6 +55,8 @@ func insert(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *m
 	logger.Infof("\nSetting result %+v\n", res)
 	return res, nil
 }
+
+
 
 //CheckStatus ensusres the mongodb status
 func CheckStatus() error {

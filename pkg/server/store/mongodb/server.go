@@ -30,5 +30,8 @@ func (s *Server) DeleteSchedulerByID(ctx context.Context, in *pbStore.EntityID) 
 
 //GetSchedulerByID function
 func (s *Server) GetSchedulerByID(ctx context.Context, in *pbStore.EntityID) (*pbStore.SchedulerEntity, error) {
-	return nil, nil
+	schd,err:=mongodb.GetScheduler(in.Id)
+	return pbStore.SchedulerEntity{
+		Description: schd.Description,
+	},err
 }

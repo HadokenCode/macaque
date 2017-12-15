@@ -78,6 +78,12 @@ func TestCreateScheduler(t *testing.T) {
 		} else {
 			assert.EqualValues(t, c.expectedError, err)
 		}
+
+		scheduler,err:=client.GetSchedulerByID(ctx,pb.EntityID{Id:result.Id})
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		fmt.Println(scheduler)
 	}
 
 }
