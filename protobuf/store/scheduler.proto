@@ -16,22 +16,16 @@ enum SchedulerStatus {
     DELETED = 3;
 }
 
-message SchedulerMeta {
-    string createdBy = 1;
-    google.protobuf.Timestamp createdOn = 2;
-    string lastModificationBy = 3;
-    google.protobuf.Timestamp lastModificationOn = 4;
-}
-
 message SchedulerEntity {
     EntityID id = 1;
-    string description = 2;
-    string expression = 3;
-    repeated string labels = 4;
-    SchedulerType type = 5;
-    SchedulerStatus status = 6;
-    SchedulerMeta meta = 7;
-    google.protobuf.Timestamp startDate = 9;
-    google.protobuf.Timestamp endDate = 10;
+    string name = 2;
+    string description = 3;
+    string expression = 4;
+    repeated string labels = 5;
+    SchedulerType type = 6;
+    SchedulerStatus status = 7;
+    map<string,string> properties = 9;
+    google.protobuf.Timestamp startDate = 10;
+    google.protobuf.Timestamp endDate = 11;
 
 }

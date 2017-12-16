@@ -2,7 +2,6 @@ package logger
 
 import (
 	log "github.com/Sirupsen/logrus"
-	envUtils "github.com/wildnature/macaque/pkg/env"
 )
 
 const (
@@ -16,6 +15,7 @@ const (
 	LoggerVersion = "logger.version"
 )
 
+/**
 //Logger global logger
 var logger = log.WithFields(log.Fields{
 	"hostname": envUtils.GetEnv(LoggerHostname, envUtils.GetEnv("macaque.hostname", "localhost")),
@@ -23,6 +23,8 @@ var logger = log.WithFields(log.Fields{
 	"service":  envUtils.GetEnv(LoggerService, envUtils.GetEnv("macaque.service", "")),
 	"version":  envUtils.GetEnv(LoggerVersion, envUtils.GetEnv("macaque.version", "0.0.1-alpha1")),
 })
+**/
+var logger = log.WithFields(log.Fields{})
 
 //Info wrapper
 func Info(args ...interface{}) {

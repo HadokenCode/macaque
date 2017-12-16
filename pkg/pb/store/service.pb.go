@@ -29,9 +29,9 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for StoreService service
 
 type StoreServiceClient interface {
-	SaveScheduler(ctx context.Context, in *SchedulerEntity, opts ...grpc.CallOption) (*EntityID, error)
-	DeleteSchedulerByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
-	GetSchedulerByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*SchedulerEntity, error)
+	Create(ctx context.Context, in *SchedulerEntity, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
+	DeleteByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
+	GetByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*SchedulerEntity, error)
 }
 
 type storeServiceClient struct {
@@ -42,27 +42,27 @@ func NewStoreServiceClient(cc *grpc.ClientConn) StoreServiceClient {
 	return &storeServiceClient{cc}
 }
 
-func (c *storeServiceClient) SaveScheduler(ctx context.Context, in *SchedulerEntity, opts ...grpc.CallOption) (*EntityID, error) {
-	out := new(EntityID)
-	err := grpc.Invoke(ctx, "/store.StoreService/SaveScheduler", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *storeServiceClient) DeleteSchedulerByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+func (c *storeServiceClient) Create(ctx context.Context, in *SchedulerEntity, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
 	out := new(google_protobuf1.Empty)
-	err := grpc.Invoke(ctx, "/store.StoreService/DeleteSchedulerByID", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/store.StoreService/Create", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *storeServiceClient) GetSchedulerByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*SchedulerEntity, error) {
+func (c *storeServiceClient) DeleteByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+	out := new(google_protobuf1.Empty)
+	err := grpc.Invoke(ctx, "/store.StoreService/DeleteByID", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storeServiceClient) GetByID(ctx context.Context, in *EntityID, opts ...grpc.CallOption) (*SchedulerEntity, error) {
 	out := new(SchedulerEntity)
-	err := grpc.Invoke(ctx, "/store.StoreService/GetSchedulerByID", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/store.StoreService/GetByID", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,65 +72,65 @@ func (c *storeServiceClient) GetSchedulerByID(ctx context.Context, in *EntityID,
 // Server API for StoreService service
 
 type StoreServiceServer interface {
-	SaveScheduler(context.Context, *SchedulerEntity) (*EntityID, error)
-	DeleteSchedulerByID(context.Context, *EntityID) (*google_protobuf1.Empty, error)
-	GetSchedulerByID(context.Context, *EntityID) (*SchedulerEntity, error)
+	Create(context.Context, *SchedulerEntity) (*google_protobuf1.Empty, error)
+	DeleteByID(context.Context, *EntityID) (*google_protobuf1.Empty, error)
+	GetByID(context.Context, *EntityID) (*SchedulerEntity, error)
 }
 
 func RegisterStoreServiceServer(s *grpc.Server, srv StoreServiceServer) {
 	s.RegisterService(&_StoreService_serviceDesc, srv)
 }
 
-func _StoreService_SaveScheduler_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StoreService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SchedulerEntity)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StoreServiceServer).SaveScheduler(ctx, in)
+		return srv.(StoreServiceServer).Create(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/store.StoreService/SaveScheduler",
+		FullMethod: "/store.StoreService/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StoreServiceServer).SaveScheduler(ctx, req.(*SchedulerEntity))
+		return srv.(StoreServiceServer).Create(ctx, req.(*SchedulerEntity))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StoreService_DeleteSchedulerByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StoreService_DeleteByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EntityID)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StoreServiceServer).DeleteSchedulerByID(ctx, in)
+		return srv.(StoreServiceServer).DeleteByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/store.StoreService/DeleteSchedulerByID",
+		FullMethod: "/store.StoreService/DeleteByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StoreServiceServer).DeleteSchedulerByID(ctx, req.(*EntityID))
+		return srv.(StoreServiceServer).DeleteByID(ctx, req.(*EntityID))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StoreService_GetSchedulerByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StoreService_GetByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EntityID)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StoreServiceServer).GetSchedulerByID(ctx, in)
+		return srv.(StoreServiceServer).GetByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/store.StoreService/GetSchedulerByID",
+		FullMethod: "/store.StoreService/GetByID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StoreServiceServer).GetSchedulerByID(ctx, req.(*EntityID))
+		return srv.(StoreServiceServer).GetByID(ctx, req.(*EntityID))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -140,16 +140,16 @@ var _StoreService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*StoreServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SaveScheduler",
-			Handler:    _StoreService_SaveScheduler_Handler,
+			MethodName: "Create",
+			Handler:    _StoreService_Create_Handler,
 		},
 		{
-			MethodName: "DeleteSchedulerByID",
-			Handler:    _StoreService_DeleteSchedulerByID_Handler,
+			MethodName: "DeleteByID",
+			Handler:    _StoreService_DeleteByID_Handler,
 		},
 		{
-			MethodName: "GetSchedulerByID",
-			Handler:    _StoreService_GetSchedulerByID_Handler,
+			MethodName: "GetByID",
+			Handler:    _StoreService_GetByID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -159,17 +159,17 @@ var _StoreService_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("store/service.proto", fileDescriptor2) }
 
 var fileDescriptor2 = []byte{
-	// 185 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0x2e, 0xc9, 0x2f,
-	0x4a, 0xd5, 0x2f, 0x4e, 0x2d, 0x2a, 0xcb, 0x4c, 0x4e, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17,
-	0x62, 0x05, 0x0b, 0x4a, 0x09, 0x41, 0xe4, 0x92, 0xf3, 0x73, 0x73, 0xf3, 0xf3, 0x20, 0x52, 0x52,
-	0xa2, 0x50, 0xf5, 0xc9, 0x19, 0xa9, 0x29, 0xa5, 0x39, 0xa9, 0x45, 0x50, 0x61, 0xe9, 0xf4, 0xfc,
-	0xfc, 0xf4, 0x9c, 0x54, 0x7d, 0x30, 0x2f, 0xa9, 0x34, 0x4d, 0x3f, 0x35, 0xb7, 0xa0, 0xa4, 0x12,
-	0x22, 0x69, 0x74, 0x94, 0x91, 0x8b, 0x27, 0x18, 0xa4, 0x2d, 0x18, 0x62, 0x8b, 0x90, 0x05, 0x17,
-	0x6f, 0x70, 0x62, 0x59, 0x6a, 0x30, 0xcc, 0x10, 0x21, 0x31, 0x3d, 0xb0, 0xb1, 0x7a, 0x70, 0x11,
-	0xd7, 0xbc, 0x92, 0xcc, 0x92, 0x4a, 0x29, 0x7e, 0xa8, 0x38, 0x84, 0xeb, 0xe9, 0x22, 0x64, 0xc7,
-	0x25, 0xec, 0x92, 0x9a, 0x93, 0x5a, 0x82, 0xd0, 0xeb, 0x04, 0x12, 0x46, 0x57, 0x27, 0x25, 0xa6,
-	0x07, 0x71, 0x90, 0x1e, 0xcc, 0x41, 0x7a, 0xae, 0x20, 0x07, 0x09, 0x59, 0x73, 0x09, 0xb8, 0xa7,
-	0x96, 0x10, 0xd4, 0x8c, 0xd5, 0x35, 0x49, 0x6c, 0x60, 0xc3, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff,
-	0xff, 0x34, 0x70, 0x6d, 0xcd, 0x34, 0x01, 0x00, 0x00,
+	// 181 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x8e, 0xc1, 0x0a, 0x82, 0x40,
+	0x10, 0x86, 0xe9, 0x90, 0xc1, 0x12, 0x04, 0x1b, 0x79, 0xb0, 0x77, 0x58, 0xc1, 0x08, 0x3a, 0x97,
+	0x12, 0x9e, 0x7d, 0x82, 0xb4, 0x3f, 0x13, 0xd4, 0x91, 0x75, 0x0c, 0x7c, 0xae, 0x5e, 0x30, 0xdc,
+	0x5d, 0x6f, 0x79, 0x9c, 0xff, 0x9f, 0xef, 0x9b, 0x11, 0xfb, 0x9e, 0x49, 0x23, 0xec, 0xa1, 0x3f,
+	0x55, 0x01, 0xd5, 0x69, 0x62, 0x92, 0x6b, 0x13, 0x06, 0xd2, 0x76, 0x05, 0x35, 0x0d, 0xb5, 0xb6,
+	0x0a, 0x0e, 0x6e, 0xbf, 0x78, 0xe3, 0x39, 0xd4, 0xd0, 0x2e, 0x3e, 0x96, 0x44, 0x65, 0x8d, 0xd0,
+	0x4c, 0xf9, 0xf0, 0x0a, 0xd1, 0x74, 0x3c, 0xda, 0x32, 0xfa, 0xae, 0xc4, 0x36, 0x9b, 0xb0, 0xcc,
+	0x5e, 0x91, 0x17, 0xe1, 0xdd, 0x34, 0x1e, 0x0c, 0xe9, 0x2b, 0xe3, 0x53, 0xd9, 0xec, 0x4b, 0x5a,
+	0xae, 0x78, 0x0c, 0x7c, 0x65, 0x85, 0x6a, 0x16, 0xaa, 0x64, 0x12, 0xca, 0xb3, 0x10, 0x31, 0x6a,
+	0x30, 0xae, 0x63, 0x1a, 0xcb, 0x9d, 0xa3, 0x2d, 0x94, 0xc6, 0x8b, 0x58, 0x24, 0x36, 0x77, 0xf0,
+	0x12, 0xf3, 0xf7, 0x85, 0xdc, 0x33, 0x8e, 0xd3, 0x2f, 0x00, 0x00, 0xff, 0xff, 0xac, 0x48, 0x1a,
+	0x72, 0x22, 0x01, 0x00, 0x00,
 }

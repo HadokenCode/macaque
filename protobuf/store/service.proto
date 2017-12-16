@@ -8,9 +8,9 @@ import "google/protobuf/empty.proto";
 
 service StoreService {
     
-    rpc SaveScheduler(SchedulerEntity) returns (EntityID);
+    rpc Create(SchedulerEntity) returns (google.protobuf.Empty);
 
-    rpc DeleteSchedulerByID (EntityID) returns (google.protobuf.Empty);
+    rpc DeleteByID (EntityID) returns (google.protobuf.Empty);
 
-    rpc GetSchedulerByID (EntityID) returns (SchedulerEntity);
+    rpc GetByID (EntityID) returns (SchedulerEntity);
 }

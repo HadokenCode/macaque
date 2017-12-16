@@ -35,33 +35,41 @@ func buildDial() *mgo.DialInfo {
 	}
 }
 
-func run(dial *mgo.DialInfo, doc document, queryFn func(doc interface{}, c *mgo.Collection) (interface{}, error)) (interface{}, error) {
+func findOne(dial *mgo.DialInfo, collection string, docID interface{}) (interface{}, error) {
 	session, err := mgo.DialWithInfo(dial)
 	if err != nil {
 		logger.Errorf("\nError %+v\n", err)
 		return nil, err
 	}
 	session.SetMode(mgo.Monotonic, true)
-	coll := session.DB(dial.Database).C(doc.collection())
+	coll := session.DB(dial.Database).C(collection)
 	if err != nil {
 		return nil, err
 	}
 	defer session.Close()
-	logger.Infof("\n Querying fn %+v\n", coll)
-	res, err := queryFn(doc, coll)
-	if err != nil {
-		return nil, err
-	}
-	logger.Infof("\nSetting result %+v\n", res)
-	return res, nil
+	var res interface{}
+	err = coll.FindId(docID).One(res)
+	return res, err
 }
 
-
+func insert(dial *mgo.DialInfo, doc document) error {
+	session, err := mgo.DialWithInfo(dial)
+	if err != nil {
+		logger.Errorf("\nError %+v\n", err)
+		return err
+	}
+	session.SetMode(mgo.Monotonic, true)
+	coll := session.DB(dial.Database).C(doc.collection())
+	if err != nil {
+		return err
+	}
+	defer session.Close()
+	return coll.Insert(doc)
+}
 
 //CheckStatus ensusres the mongodb status
 func CheckStatus() error {
 	dial := buildDial()
-	logger.Infof("\n - Dial details: %+v \n", dial)
 	sess, err := mgo.DialWithInfo(dial)
 	if err != nil {
 		logger.Errorf("\nError: %s \n", err.Error())

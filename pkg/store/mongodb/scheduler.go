@@ -1,18 +1,24 @@
 package mongodb
 
 import (
-	constant "github.com/wildnature/macaque/pkg/constant/store/mongodb"
+	"errors"
+	"time"
+
 	"github.com/wildnature/macaque/pkg/logger"
-	mgo "gopkg.in/mgo.v2"
 )
 
-//Scheduler structure
+//Scheduler structure to be persisted
 type Scheduler struct {
-	Name        string
-	ID          string
-	Description string
-	Expression  string
-	Labels      []string
+	ID          string            `bson:"_id,omitempty"`
+	Name        string            `bson:"name,omitempty"`
+	Description string            `bson:"description,omitempty"`
+	Expression  string            `bson:"expression,omitempty"`
+	Labels      []string          `bson:"labels,omitempty"`
+	Type        string            `bson:"type,omitempty"`
+	Status      string            `bson:"status,omitempty"`
+	StartDate   *time.Time        `bson:"startDate,omitempty"`
+	EndDate     *time.Time        `bson:"endDate,omitempty"`
+	Properties  map[string]string `bson:"properties,omitempty"`
 }
 
 func (s *Scheduler) collection() string {
@@ -21,29 +27,23 @@ func (s *Scheduler) collection() string {
 
 //SaveScheduler method
 func SaveScheduler(scheduler *Scheduler) error {
-	schedulerCollection := getConfigValueOrPanic(constant.SchedulerCollection)
-	logger.Infof("Getting collection name %s", schedulerCollection)
 	mgoDial := buildDial()
-	logger.Infof("Connection was already set up %v", mgoDial)
-	_, err := run(mgoDial, scheduler, insertSchedulerEntity)
-	return err
+	return insert(mgoDial, scheduler)
 }
 
-//SaveScheduler method
-func GetScheduler(schedulerID string) (*Scheduler,error) {
-	schedulerCollection := getConfigValueOrPanic(constant.SchedulerCollection)
-	logger.Infof("Getting collection name %s", schedulerCollection)
+//GetScheduler method
+func GetScheduler(schedulerID string) (*Scheduler, error) {
 	mgoDial := buildDial()
-	logger.Infof("Connection was already set up %v", mgoDial)
-	return run(mgoDial, schedulerID, getSchedulerEntity)
-}
-
-func insertSchedulerEntity(scheduler interface{}, c *mgo.Collection) (interface{}, error) {
-	logger.Infof("Inserting scheduler %v into the mongo database", scheduler)
-	return nil, c.Insert(scheduler)
-}
-
-func getSchedulerEntity(schedulerID string, c *mgo.Collection) (*Scheduler, error) {
-	logger.Infof("Getting scheduler from", schedulerID)
-	return nil, c.FindId(schedulerID)
+	logger.Infof("\nSearching schedule for ID %s\n", schedulerID)
+	res, err := findOne(mgoDial, "scheduler", schedulerID)
+	if err == nil {
+		s, ok := res.(*Scheduler)
+		if !ok {
+			return nil, errors.New("Invalid response from mongodb")
+		}
+		logger.Infof("\nResponse from mongodb is %+v\n", s)
+		return s, nil
+	}
+	logger.Errorf("\nUnexpected error %s\n", err.Error())
+	return nil, err
 }
