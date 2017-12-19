@@ -3,8 +3,9 @@ package mongodb
 import (
 	"time"
 
-	"github.com/golang/protobuf/ptypes"
+	"gopkg.in/mgo.v2/bson"
 
+	"github.com/golang/protobuf/ptypes"
 	google_protobuf "github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/wildnature/macaque/pkg/logger"
@@ -27,7 +28,7 @@ func toTime(ts *timestamp.Timestamp) *time.Time {
 
 //Create function
 func (s *Server) Create(ctx context.Context, in *pbStore.SchedulerEntity) (*google_protobuf.Empty, error) {
-	logger.Infof("Retrieving request %v", in)
+	logger.Infof("Retrieving request %+v", in)
 	err := mongodb.SaveScheduler(&mongodb.Scheduler{
 		ID:          in.GetId().Id,
 		Name:        in.GetName(),
@@ -40,15 +41,44 @@ func (s *Server) Create(ctx context.Context, in *pbStore.SchedulerEntity) (*goog
 		StartDate:   toTime(in.GetStartDate()),
 		EndDate:     toTime(in.GetEndDate()),
 	})
+	return &google_protobuf.Empty{}, err
+}
+
+func struct2map(structure interface{}) (bson.M, error) {
+	data, err := bson.Marshal(structure)
 	if err != nil {
 		return nil, err
 	}
-	return &google_protobuf.Empty{}, nil
+	var interfaceVal interface{}
+	bson.Unmarshal(data, &interfaceVal)
+	return interfaceVal.(bson.M), nil
+}
+
+//Update function
+func (s *Server) Update(ctx context.Context, in *pbStore.SchedulerEntity) (*google_protobuf.Empty, error) {
+	logger.Infof("Retrieving request %+v", in)
+	schd := &mongodb.Scheduler{
+		ID:          in.GetId().Id,
+		Name:        in.GetName(),
+		Description: in.GetDescription(),
+		Expression:  in.GetExpression(),
+		Labels:      in.GetLabels(),
+		Properties:  in.GetProperties(),
+		Status:      pbStore.SchedulerStatus_name[int32(in.GetStatus())],
+		Type:        pbStore.SchedulerType_name[int32(in.GetType())],
+		StartDate:   toTime(in.GetStartDate()),
+		EndDate:     toTime(in.GetEndDate()),
+	}
+	res, err := struct2map(schd)
+	if err != nil {
+		return nil, err
+	}
+	return &google_protobuf.Empty{}, mongodb.UpdateScheduler(in.GetId().Id, res)
 }
 
 //DeleteByID function
 func (s *Server) DeleteByID(ctx context.Context, in *pbStore.EntityID) (*google_protobuf.Empty, error) {
-	return nil, nil
+	return &google_protobuf.Empty{}, mongodb.DeleteScheduler(in.Id)
 }
 
 //GetByID function
@@ -57,5 +87,5 @@ func (s *Server) GetByID(ctx context.Context, in *pbStore.EntityID) (*pbStore.Sc
 	if err != nil {
 		return nil, err
 	}
-	return &pbStore.SchedulerEntity{Id: &pbStore.EntityID{Id: schd.ID}}, err
+	return &pbStore.SchedulerEntity{Id: &pbStore.EntityID{Id: schd.ID}}, nil
 }

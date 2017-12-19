@@ -10,6 +10,8 @@ service StoreService {
     
     rpc Create(SchedulerEntity) returns (google.protobuf.Empty);
 
+    rpc Update(SchedulerEntity) returns (google.protobuf.Empty);
+
     rpc DeleteByID (EntityID) returns (google.protobuf.Empty);
 
     rpc GetByID (EntityID) returns (SchedulerEntity);

@@ -7,6 +7,11 @@ import (
 	constant "github.com/wildnature/macaque/pkg/constant/store/mongodb"
 	"github.com/wildnature/macaque/pkg/logger"
 	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
+
+const (
+	mgoID string = "_id"
 )
 
 type document interface {
@@ -35,21 +40,64 @@ func buildDial() *mgo.DialInfo {
 	}
 }
 
-func findOne(dial *mgo.DialInfo, collection string, docID interface{}) (interface{}, error) {
+func findOne(dial *mgo.DialInfo, collection string, docID interface{}) (bson.M, error) {
 	session, err := mgo.DialWithInfo(dial)
 	if err != nil {
 		logger.Errorf("\nError %+v\n", err)
 		return nil, err
 	}
 	session.SetMode(mgo.Monotonic, true)
+	logger.Infof("Searching for document in %s ", collection)
 	coll := session.DB(dial.Database).C(collection)
 	if err != nil {
 		return nil, err
 	}
 	defer session.Close()
-	var res interface{}
-	err = coll.FindId(docID).One(res)
+	var res bson.M
+	err = coll.FindId(docID).One(&res)
+	if err != nil {
+		logger.Error(err.Error())
+		return nil, err
+	}
 	return res, err
+}
+
+func partialUpdate(dial *mgo.DialInfo, collection string, docID interface{}, fields map[string]interface{}) error {
+	session, err := mgo.DialWithInfo(dial)
+	if err != nil {
+		logger.Errorf("\nError %+v\n", err)
+		return err
+	}
+	session.SetMode(mgo.Monotonic, true)
+	coll := session.DB(dial.Database).C(collection)
+	if err != nil {
+		logger.Errorf("\nError %+v\n", err)
+		return err
+	}
+	defer session.Close()
+	return coll.Update(
+		bson.M{mgoID: docID},
+		bson.M{"$set": fields},
+	)
+}
+
+func partialUpdateWithBytes(dial *mgo.DialInfo, collection string, docID interface{}, fields bson.Binary) error {
+	session, err := mgo.DialWithInfo(dial)
+	if err != nil {
+		logger.Errorf("\nError %+v\n", err)
+		return err
+	}
+	session.SetMode(mgo.Monotonic, true)
+	coll := session.DB(dial.Database).C(collection)
+	if err != nil {
+		logger.Errorf("\nError %+v\n", err)
+		return err
+	}
+	defer session.Close()
+	return coll.Update(
+		bson.M{mgoID: docID},
+		bson.M{"$set": string(fields.Data)},
+	)
 }
 
 func insert(dial *mgo.DialInfo, doc document) error {

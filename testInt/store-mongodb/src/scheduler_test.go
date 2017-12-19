@@ -11,6 +11,8 @@ import (
 
 	"time"
 
+	"github.com/golang/protobuf/ptypes"
+	google_protobuf "github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/wildnature/macaque/pkg/grpc/health"
 	"github.com/wildnature/macaque/pkg/logger"
 	pb "github.com/wildnature/macaque/pkg/pb/store"
@@ -25,6 +27,7 @@ const (
 
 // TestMain before each test
 func TestMain(m *testing.M) {
+	rand.Seed(time.Now().UnixNano())
 	tries := 3
 	ready := false
 	for !ready && tries > 0 {
@@ -59,6 +62,11 @@ func randomStr(n int) string {
 	return string(b)
 }
 
+func now(seconds int64) *google_protobuf.Timestamp {
+	ts := ptypes.TimestampNow()
+	ts.Seconds += seconds
+	return ts
+}
 func TestCreateScheduler(t *testing.T) {
 	logger.Debug("Running integration test..")
 	conn, _ := grpc.Dial(address, grpc.WithInsecure())
@@ -84,8 +92,8 @@ func TestCreateScheduler(t *testing.T) {
 					"a": "b",
 					"c": "d",
 				},
-				StartDate: nil,
-				EndDate:   nil,
+				StartDate: now(0),
+				EndDate:   now(10000),
 			},
 			expectedError: nil,
 		},
@@ -97,7 +105,7 @@ func TestCreateScheduler(t *testing.T) {
 		result, err := client.Create(ctx, c.content)
 		logger.Debugf("\n\n%s: \n", c.description)
 		if err != nil {
-			fmt.Println(err.Error())
+			t.Error(err.Error())
 		}
 		if c.expectedError == nil {
 			assert.NotEmpty(t, result)
@@ -106,7 +114,28 @@ func TestCreateScheduler(t *testing.T) {
 		}
 		scheduler, err := client.GetByID(ctx, &pb.EntityID{Id: c.content.GetId().Id})
 		if err != nil {
-			fmt.Println(err.Error())
+			t.Error(err.Error())
+		}
+		fmt.Println(scheduler)
+
+		fmt.Println("\n\n=============\n\n")
+		schdUpdate := &pb.SchedulerEntity{
+			Id:   c.content.GetId(),
+			Name: "New name",
+		}
+		schdUpdate.Name = " New name"
+		_, err = client.Update(ctx, schdUpdate)
+		if err != nil {
+			t.Error(err.Error())
+		}
+		fmt.Println("\n\n=============\n\n")
+		_, err = client.DeleteByID(ctx, &pb.EntityID{Id: c.content.GetId().Id})
+		if err != nil {
+			t.Error(err.Error())
+		}
+		scheduler, err = client.GetByID(ctx, &pb.EntityID{Id: c.content.GetId().Id})
+		if err != nil {
+			t.Error(err.Error())
 		}
 		fmt.Println(scheduler)
 	}

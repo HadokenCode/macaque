@@ -11,3 +11,6 @@ import:
   - protoc-gen-go
   - proto
 - package: gopkg.in/mgo.v2
+- package: github.com/fatih/structs
+  version: ^1.0.0
+- package: github.com/mitchellh/mapstructure
